@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 	"math/rand"
@@ -9,16 +10,21 @@ import (
 )
 
 type Weather struct {
-	id      int
-	feeling string
+	Id      int    `json:"id"`
+	Feeling string `json:"feeling"`
 }
 
 func weatherJSON(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json") //setting content-type to JSON
 	var curr_weather Weather
-	curr_weather.id = rand.Int()
-	curr_weather.feeling = time.Now().String()
+	curr_weather.Id = rand.Int() //generating ID
+	curr_weather.Feeling = time.Now().String()
 	if r.Method == "GET" {
-		fmt.Fprintf(w, "id: %d\nfeeling: %s", curr_weather.id, curr_weather.feeling)
+		json_bytes, err := json.Marshal(curr_weather)
+		if err != nil {
+			log.Fatal("Convert struct to JSON: ", err)
+		}
+		fmt.Fprint(w, string(json_bytes))
 	}
 }
 
