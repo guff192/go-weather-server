@@ -20,7 +20,7 @@ func weatherJSON(w http.ResponseWriter, r *http.Request) {
 	curr_weather.Id = rand.Int() //generating ID
 	curr_weather.Feeling = time.Now().String()
 	if r.Method == "GET" {
-		json_bytes, err := json.Marshal(curr_weather)
+		json_bytes, err := json.MarshalIndent(curr_weather, "", "    ") //Creating JSON in pretty-print format with 4-space indent
 		if err != nil {
 			log.Fatal("Convert struct to JSON: ", err)
 		}
